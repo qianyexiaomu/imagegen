@@ -20,6 +20,12 @@ After installation, add your API key to the local `config.json` file created fro
 Ask your coding agent to generate a new image or edit an existing image. The
 skill uses the HappyCode API for image generation, edits, and inpainting.
 
+### Batch generation
+
+Requests for 2 to 5 output images are split into independent single-image API
+requests and run concurrently. One batch supports at most 5 images; requests
+for more images are rejected before any API call starts.
+
 ## Development
 
 Generated images are written to `output/` and are intentionally not tracked.
@@ -44,6 +50,11 @@ npx skills add gorden888/happycode-imagegen
 
 让你的编程 Agent 生成新图片或编辑已有图片。该 skill 会通过 HappyCode API
 处理图像生成、编辑和局部重绘。
+
+### 批量生成
+
+请求生成 2 到 5 张图片时，skill 会拆分为独立的单图 API 请求并发执行。每批
+最多支持 5 张；超过 5 张会在发起任何 API 请求前直接拒绝。
 
 ### 开发
 
