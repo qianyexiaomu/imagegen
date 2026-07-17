@@ -25,6 +25,11 @@ skill uses the HappyCode API for image generation, edits, and inpainting.
 Requests for 2 to 5 output images are split into independent single-image API
 requests and run concurrently. One batch supports at most 5 images; requests
 for more images are rejected before any API call starts.
+Results are reported in request order, and cancelling the batch stops its
+active child requests.
+
+Node.js is preferred. Equivalent Python clients provide runtime fallback for
+both single-image and batch requests.
 
 ## Development
 
@@ -55,6 +60,10 @@ npx skills add gorden888/happycode-imagegen
 
 请求生成 2 到 5 张图片时，skill 会拆分为独立的单图 API 请求并发执行。每批
 最多支持 5 张；超过 5 张会在发起任何 API 请求前直接拒绝。
+结果会按请求顺序返回；取消批处理时，也会终止其中仍在运行的子请求。
+
+默认优先使用 Node.js；Node 运行时不可用时，单图和批量请求均可回退到等价的
+Python 客户端。
 
 ### 开发
 

@@ -18,7 +18,7 @@ import urllib.error
 import urllib.request
 
 
-VERSION = "3.6.0"
+VERSION = "3.7.0"
 SKILL_DIR = Path(__file__).resolve().parents[1]
 CONFIG_PATH = SKILL_DIR / "config.json"
 DEFAULT_BASE_URL = "https://us.happycode.vip/v1"

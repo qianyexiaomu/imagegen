@@ -16,7 +16,7 @@ import path from "node:path";
 import tls from "node:tls";
 import { fileURLToPath } from "node:url";
 
-const VERSION = "3.6.0";
+const VERSION = "3.7.0";
 const MIN_NODE_MAJOR = 18;
 const SKILL_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CONFIG_PATH = path.join(SKILL_DIR, "config.json");
