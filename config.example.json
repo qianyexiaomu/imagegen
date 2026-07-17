@@ -1,0 +1,6 @@
+{
+  "api_key": "replace-with-your-api-key",
+  "proxy": "",
+  "base_url": "https://us.happycode.vip/v1",
+  "model": "gpt-image-2"
+}
