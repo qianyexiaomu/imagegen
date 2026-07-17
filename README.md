@@ -6,9 +6,23 @@ Generate and edit raster images through the HappyCode OpenAI-compatible GPT Imag
 
 ## Install
 
+Install in the current project:
+
 ```bash
 npx skills add gorden888/happycode-imagegen
 ```
+
+Install globally for all supported agents:
+
+```bash
+npx skills add -g gorden888/happycode-imagegen
+```
+
+**Quick install with Codex**
+
+Send Codex this message:
+
+> Globally install this skill: `npx skills add -g gorden888/happycode-imagegen`
 
 ## Configure
 
@@ -42,9 +56,23 @@ The distributable configuration template is `config.example.json`.
 
 ### 安装
 
+安装到当前项目：
+
 ```bash
 npx skills add gorden888/happycode-imagegen
 ```
+
+全局安装到所有支持的 Agent：
+
+```bash
+npx skills add -g gorden888/happycode-imagegen
+```
+
+**使用 Codex 快速安装**
+
+将下面这句话发送给 Codex：
+
+> 全局安装技能：`npx skills add -g gorden888/happycode-imagegen`
 
 ### 配置
 
