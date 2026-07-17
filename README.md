@@ -1,5 +1,7 @@
 # HappyCode Image Gen
 
+[English](#happycode-image-gen) | [简体中文](#中文说明)
+
 Generate and edit raster images through the HappyCode OpenAI-compatible GPT Image 2 API.
 
 ## Install
@@ -22,3 +24,28 @@ skill uses the HappyCode API for image generation, edits, and inpainting.
 
 Generated images are written to `output/` and are intentionally not tracked.
 The distributable configuration template is `config.example.json`.
+
+## 中文说明
+
+通过 HappyCode 兼容 OpenAI 的 GPT Image 2 API 生成和编辑位图图片。
+
+### 安装
+
+```bash
+npx skills add gorden888/happycode-imagegen
+```
+
+### 配置
+
+安装后，根据 `config.example.json` 创建本地 `config.json`，并填写自己的
+`api_key`。不要提交 `config.json`，也不要泄露其中的 API 密钥。
+
+### 使用
+
+让你的编程 Agent 生成新图片或编辑已有图片。该 skill 会通过 HappyCode API
+处理图像生成、编辑和局部重绘。
+
+### 开发
+
+生成图片会写入 `output/`，该目录不会被 Git 跟踪。可发布的配置模板为
+`config.example.json`。
