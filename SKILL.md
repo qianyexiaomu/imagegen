@@ -48,7 +48,36 @@ python "<SKILL_DIR>/scripts/imagegen-batch.py" --prompt "<derived prompt 1>" --p
 
 Add `--out` only when the user requests another destination. On image-capable surfaces, otherwise use the default `<working-directory>/output`; on other surfaces, ask for a destination first. Do not create unrequested variants.
 
-The clients use a 600-second network timeout. Start one client process for the operation; the batch client owns its concurrent children and forwards termination signals to them. With `functions.exec`, use `// @exec: {"yield_time_ms": 660000}`, start `exec_command` with `yield_time_ms: 30000`, then continue the same `session_id` through `write_stdin` with empty input and `yield_time_ms: 300000` until it exits. Never restart, inspect output files, or start another command while that process is active.
+The clients use a 600-second network timeout. Start one client process for the operation; the batch client owns its concurrent children and forwards termination signals to them. Never restart, inspect output files, or start another command while that process is active.
+
+With `functions.exec`, keep the client invocation and every continuation inside one `functions.exec` call. Begin its JavaScript input with this exact first line and use the control flow below, replacing only `cmd` with the fully shell-quoted single or batch command:
+
+```javascript
+// @exec: {"yield_time_ms": 660000, "max_output_tokens": 20000}
+
+const first = await tools.exec_command({
+  cmd: '<shell-quoted client command>',
+  yield_time_ms: 30000,
+  max_output_tokens: 20000,
+});
+let result = first;
+let output = first.output || "";
+let sessionId = first.session_id;
+while (sessionId != null) {
+  const next = await tools.write_stdin({
+    session_id: sessionId,
+    chars: "",
+    yield_time_ms: 300000,
+    max_output_tokens: 20000,
+  });
+  result = next;
+  output += next.output || "";
+  sessionId = next.session_id;
+}
+text(JSON.stringify({ exit_code: result.exit_code, output }));
+```
+
+Do not let `functions.exec` return while `sessionId` is non-null, and do not move `write_stdin` into a later model turn. An outer `Script running with cell ID` is non-terminal; continue that same `functions.exec` cell rather than starting another model-driven client or session continuation.
 
 ## Client Protocol
 
