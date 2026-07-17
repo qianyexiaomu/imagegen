@@ -44,6 +44,15 @@ Never read, display, or modify the values in `config.json`, and never ask the us
 - Resolve a pronoun only to select an already supplied input image; do not alter the prompt text to record that resolution.
 - When inspecting a result, compare it only with the user's exact request.
 
+## Batch Generation
+
+- Interpret a quantity as an output count only when it explicitly modifies the requested images, such as "生成两张" or "给我 3 张". A quantity describing subjects inside one image, such as "一张图片中包含 2 个", is not a batch and must stay in one request.
+- For a new-image request with an output count from 2 through 5, make that many independent single-image requests concurrently. Do not use an API `n` parameter and do not ask for multiple images in one prompt.
+- Derive each single-image prompt by replacing only the output-count phrase with a one-image phrase. For example, run `生成1张美女照片` twice for `生成2张美女照片`. Preserve all other user text exactly; do not add "独立", "不同", style language, constraints, or any other wording.
+- When the output-count request explicitly asks for different values of an attribute, replace only the applicable `不同` with `随机` in each single-image prompt when that is enough to express a standalone request. For example, `生成3张不同颜色的衣服` becomes three requests for `生成1张随机颜色的衣服`. If that minimal replacement is not possible, retain the original wording after changing only the output count.
+- If the requested output count exceeds 5, do not start any client or API process. Tell the user that one batch supports at most 5 images and ask them to reduce the count.
+- If the output count is unclear, ask for the count before starting. Do not infer a batch from words such as "多个" or "一些".
+
 ## Execute
 
 For one requested asset or edit, start the Node client after the required `SKILL.md` read:
@@ -56,6 +65,12 @@ node "<SKILL_DIR>/scripts/imagegen.mjs" --prompt "<user's request verbatim>"
 node "<SKILL_DIR>/scripts/imagegen.mjs" --image "<target path>" --prompt "<user's requested change verbatim>"
 ```
 
+For a 2-5 image batch, call the batch client once with one derived single-image prompt per `--prompt`. It launches the independent image requests concurrently and enforces the five-image limit:
+
+```bash
+node "<SKILL_DIR>/scripts/imagegen-batch.mjs" --prompt "<first derived prompt>" --prompt "<second derived prompt>"
+```
+
 Use the Python client only when the shell cannot start `node` or the Node client exits with `RUNTIME_UNAVAILABLE:`. That marker means the installed Node runtime is unsupported and no API request started. Use an available Python 3 launcher (`python3`, `python`, or `py -3`) with the same arguments:
 
 ```bash
@@ -66,7 +81,7 @@ Do not fall back after `ERROR:`, an interruption, a timeout, an active process, 
 
 Repeat `--image` for relevant inputs. Add `--mask` only when supplied. Add `--out` only when the user requested another destination. On an image-capable surface, use the default output directory unless the user requested another one. On a non-image-capable surface, ask for a destination before running.
 
-For multiple explicitly requested assets, run one process per asset sequentially. Do not create unrequested variants.
+For a batch, use the batch client rather than separate `exec_command` calls. Wait on its one process using the continuation flow below; it waits for all concurrent child requests. Do not create unrequested variants.
 
 The clients use a 600-second network timeout. Prefer one blocking execution call that waits for the client to exit. With `functions.exec`, begin the tool input with this exact first line:
 
