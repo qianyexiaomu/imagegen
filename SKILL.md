@@ -12,7 +12,7 @@ Use only the HappyCode clients in `<SKILL_DIR>/scripts`; do not call the built-i
 1. Treat a request without an input image as generation. Treat a requested change to an existing image as an edit; ask for a target only when none is available.
 2. Identify each supplied image as an edit target, reference, mask, or supporting input. Pass every relevant non-mask image with repeated `--image`; use `--mask` only for a supplied mask.
 3. Ask another question only when a missing detail makes execution impossible.
-4. Pass the user's request verbatim as the `--prompt` argument, except for the batch transformation below. Do not translate, paraphrase, expand, censor, or add style, content, negative, or preservation instructions. Resolve pronouns only when selecting inputs.
+4. Before calling the client, understand the user's request and compose the `--prompt` argument yourself: resolve pronouns, then expand the request into a complete, self-contained image-generation prompt (subject, action, composition, style, lighting, medium, etc. as relevant) that captures everything the user asked for. Preserve every explicit requirement, wording, and named detail exactly as given; add only what is needed to remove ambiguity, and never invent content that contradicts the request, drop anything the user specified, or censor it. Translate a non-English request into English only when doing so is likely to improve generation quality, keeping the meaning intact. Apply this same expansion when deriving each per-image prompt for the batch transformation below.
 5. Shell-quote every dynamic argument so the client receives the exact prompt and paths as argument values.
 
 ## Track Edit Inputs
